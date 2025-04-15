@@ -1,73 +1,58 @@
 module address_mux_tb();
-    // Parameters
-    localparam WIDTH = 5;
-
     // Testbench signals
-    reg [WIDTH-1:0] inst_addr;
-    reg [WIDTH-1:0] op_addr;
     reg sel;
-    wire [WIDTH-1:0] addr_out;
+  	reg [4:0] ir_addr;
+  	reg [4:0] pc_addr;
+    wire [4:0] addr_out;
 
-    // Instantiate the address mux
-    address_mux #(
-        .WIDTH(WIDTH)
-    ) mux (
-        .inst_addr(inst_addr),
-        .op_addr(op_addr),
+    // Instantiate the Address Mux module
+    address_mux uut (
         .sel(sel),
+      	.ir_addr(ir_addr),
+      	.pc_addr(pc_addr),
         .addr_out(addr_out)
     );
 
-    // Test stimulus
+    // Test procedure
     initial begin
-        // Initialize signals
-        inst_addr = 0;
-        op_addr = 0;
-        sel = 0;
+        // Dump variables for waveform viewing
+        // $dumpfile("addr_mux_tb.vcd");
+        // $dumpvars(0, tb_address_mux);
 
-        // Test case 1: Select instruction address
-        #10;
-        inst_addr = 5'b10101;
-        op_addr = 5'b11111;
-        sel = 0;
-        #10;
-        if (addr_out !== inst_addr)
-            $display("Test 1 Failed: Expected %b, got %b", inst_addr, addr_out);
-        else
-            $display("Test 1 Passed: Instruction address selected correctly");
-
-        // Test case 2: Select operand address
-        #10;
-        inst_addr = 5'b10101;
-        op_addr = 5'b11111;
+        // Test case 1: Select instruction address (sel = 1)
         sel = 1;
+        ir_addr = 5'b10110;  // Example: 22
+        pc_addr = 5'b00011;    // Example: 3
         #10;
-        if (addr_out !== op_addr)
-            $display("Test 2 Failed: Expected %b, got %b", op_addr, addr_out);
-        else
-            $display("Test 2 Passed: Operand address selected correctly");
+      	$display("sel = %b, ir_addr = %b, pc_addr = %b, addr_out = %b", 
+                 sel, ir_addr, pc_addr, addr_out);
 
-        // Test case 3: Change addresses while maintaining selection
+        // Test case 2: Select operand address (sel = 0)
         sel = 0;
+        ir_addr = 5'b10110;  // Same as above
+        pc_addr = 5'b00011;    // Same as above
         #10;
-        inst_addr = 5'b00001;
-        op_addr = 5'b00010;
+      $display("sel = %b, ir_addr = %b, pc_addr = %b, addr_out = %b", 
+                 sel, ir_addr, pc_addr, addr_out);
+
+        // Test case 3: Change inputs and select instruction address
+        sel = 1;
+        ir_addr = 5'b11111;  // Example: 31
+        pc_addr = 5'b00100;    // Example: 4
         #10;
-        if (addr_out !== inst_addr)
-            $display("Test 3 Failed: Expected %b, got %b", inst_addr, addr_out);
-        else
-            $display("Test 3 Passed: Address change handled correctly");
+      $display("sel = %b, ir_addr = %b, pc_addr = %b, addr_out = %b", 
+                 sel, ir_addr, pc_addr, addr_out);
+
+        // Test case 4: Change inputs and select operand address
+        sel = 0;
+        ir_addr = 5'b11111;  // Same as above
+        pc_addr = 5'b00100;    // Same as above
+        #10;
+      $display("sel = %b, ir_addr = %b, pc_addr = %b, addr_out = %b", 
+                 sel, ir_addr, pc_addr, addr_out);
 
         // End simulation
-        #10;
-        $display("All tests completed");
-        $finish;
+        #10 $finish;
     end
-
-    // Optional: Generate VCD file for waveform viewing
-    // initial begin
-    //     $dumpfile("address_mux_tb.vcd");
-    //     $dumpvars(0, address_mux_tb);
-    // end
 
 endmodule

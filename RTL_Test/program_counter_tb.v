@@ -1,5 +1,5 @@
 module program_counter_tb();
-   // Testbench signals
+   /// Testbench signals
     reg clk;
     reg rst;
     reg ld_pc;
@@ -33,7 +33,7 @@ module program_counter_tb();
 
         // Dump variables for waveform viewing
         $dumpfile("pc_tb.vcd");
-        $dumpvars(0, program_counter_tb);
+        $dumpvars(0, tb_program_counter);
 
         // Test case 1: Reset
         #10 rst = 1;          // Apply reset
