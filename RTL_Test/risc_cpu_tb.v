@@ -1,3 +1,25 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 04/15/2025 09:11:11 AM
+// Design Name: 
+// Module Name: risc_cpu_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 module risc_cpu_tb();
     // Test signals
     reg clk;
@@ -31,7 +53,6 @@ module risc_cpu_tb();
         dut.mem._memory[2] = 8'b110_10110;  // STO 22 (Store to addr 22)
         dut.mem._memory[3] = 8'b000_00000;  // HLT
 
-        // Initialize data values
         dut.mem._memory[20] = 8'h05;        // First operand
         dut.mem._memory[21] = 8'h03;        // Second operand
     end
@@ -48,21 +69,19 @@ module risc_cpu_tb();
         // Wait for program to complete (halt)
         wait(halt);
         
-        // Verify results
         #10;
         if (dut.mem._memory[22] === 8'h08)
             $display("Test Passed: Correct result stored in memory");
         else
             $display("Test Failed: Expected 8'h08, got %h", dut.mem._memory[22]);
 
-        // End simulation
         #20 $finish;
     end
 
-    // Monitor important signals
     initial begin
-        $monitor("Time=%0t rst=%b halt=%b pc=%h ir=%h acc=%h",
-                 $time, rst, halt, dut.pc_addr, dut.ir_out, dut.acc_out);
+       $monitor("Time=%0t rst=%b halt=%b pc=%h ir=%h acc=%h state=%h opcode=%b", 
+         $time, rst, halt, dut.pc_addr, dut.ir_out, dut.acc_out, 
+         dut.ctrl.current_state, dut.opcode);
     end
 
     // Generate waveform file
