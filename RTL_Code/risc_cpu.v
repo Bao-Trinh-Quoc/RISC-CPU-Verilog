@@ -86,6 +86,21 @@ module risc_cpu (
     );
 
     // Controller
-    
+        controller ctrl (
+        .clk(clk),
+        .rst(rst),
+        .opcode(opcode),
+        .zero(is_zero),
+        .sel(sel),
+        .rd(rd),
+        .ld_ir(ld_ir),
+        .halt(halt),
+        .inc_pc(inc_pc),
+        .ld_ac(ld_ac),
+        .ld_pc(ld_pc),
+        .wr(wr),
+        .data_e(data_e)
+    );
+
 
 endmodule
