@@ -70,9 +70,9 @@ module controller (
         endcase
     end
 
-    // Điều khiển tín hiệu theo trạng thái và opcode
+    // Control signal generation
     always @(*) begin
-        // reset tất cả tín hiệu
+        // Reset all signals
         sel = 0;
         rd = 0;
         ld_ir = 0;
@@ -93,36 +93,45 @@ module controller (
             end
             INST_LOAD: begin
                 sel = 1;
+                rd = 1;
                 ld_ir = 1;
             end
             IDLE: begin
-                if (opcode == 3'b000) // HLT
-                    halt = 1;
-                else if (opcode == 3'b001 && zero) // SKZ
-                    inc_pc = 1;
+                sel = 1;
+                rd = 1;
+                ld_ir = 1;
             end
             OP_ADDR: begin
-                sel = 0;
+                if (opcode == 3'b000) // HLT
+                    halt = 1;
+                inc_pc = 1;
             end
             OP_FETCH: begin
-                if (opcode != 3'b110) rd = 1; // không cần đọc nếu là STO
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) 
+                    rd = 1; // ADD, AND, XOR, LDA
             end
             ALU_OP: begin
-                case (opcode)
-                    3'b010, 3'b011, 3'b100: ld_ac = 1;  // ADD, AND, XOR
-                    3'b101: ld_ac = 1;                // LDA
-                    3'b111: ld_pc = 1;                // JMP
-                    default: ;
-                endcase
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) begin
+                    rd = 1;
+                    ld_ac = 1;
+                end
+                else if(opcode == 3'b001 && zero == 1) 
+                    inc_pc = 1;
+                else if(opcode == 3'b111) 
+                    ld_pc = 1;
+                else if(opcode == 3'b110) begin // STO
+                    data_e = 1;
+                end
             end
             STORE: begin
                 if (opcode == 3'b110) begin // STO
                     wr = 1;
                     data_e = 1;
                 end
+                else if(opcode == 3'b111) 
+                    ld_pc = 1;
             end
         endcase
     end
 
 endmodule
-

@@ -31,6 +31,9 @@ module risc_cpu (
     assign operand = ir_out[4:0];   // Bottom 5 bits are operand/address
     assign ir_addr = operand;        // Connect operand to ir_addr
 
+    // Data bus control for writing (STO)
+    assign data_bus = data_e ? acc_out : 8'bz;
+
     // Program Counter
     program_counter pc (
         .clk(clk),
@@ -86,7 +89,7 @@ module risc_cpu (
     );
 
     // Controller
-        controller ctrl (
+    controller ctrl (
         .clk(clk),
         .rst(rst),
         .opcode(opcode),
@@ -101,6 +104,5 @@ module risc_cpu (
         .wr(wr),
         .data_e(data_e)
     );
-
 
 endmodule
