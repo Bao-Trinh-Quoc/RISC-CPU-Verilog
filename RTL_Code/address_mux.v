@@ -3,7 +3,7 @@ module address_mux #(
 )(
     input wire [WIDTH-1:0] inst_addr,    // Instruction address input
     input wire [WIDTH-1:0] op_addr,      // Operand address input
-    input wire sel,                      // Select signal (0: inst_addr, 1: op_addr)
+    input wire sel,                      // Select signal (1: inst_addr, 0: op_addr)
     output wire [WIDTH-1:0] addr_out     // Output address
 );
 
