@@ -88,7 +88,7 @@ This project was developed as part of a course on LSI Logic Design. Special than
 # Members
 - Member 1: Trịnh Quốc Bảo
 - Member 2: Hoàng Văn Huy
-- Member 3: Nguyễn Đức Cường
+- Member 3: Lê Đức Cường
 - Member 4: Phan Minh Trọng
 - Member 5: Trần Đình Quang
 
