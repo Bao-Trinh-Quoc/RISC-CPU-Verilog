@@ -8,6 +8,6 @@ module address_mux #(
 );
 
     // Simple multiplexer logic
-    assign addr_out = sel ? op_addr : inst_addr;
+    assign addr_out = !sel ? op_addr : inst_addr;
 
 endmodule
